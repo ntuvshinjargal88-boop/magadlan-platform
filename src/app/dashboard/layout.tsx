@@ -28,6 +28,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <nav className="flex flex-col gap-1 p-3 text-sm">
           <NavLink href="/dashboard">Тойм</NavLink>
           <NavLink href="/dashboard/criteria">Магадлангийн шалгуур</NavLink>
+          <NavLink href="/dashboard/iso-criteria">MNS ISO 15189:2024 шалгуур</NavLink>
           <NavLink href="/dashboard/documents">Тушаал, журам</NavLink>
           {isOrgAdmin && <NavLink href="/dashboard/admin/users">Хэрэглэгчид</NavLink>}
           {isSuperAdmin && (
