@@ -5,13 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p ${PORT:-3000}",
-    "deploy:start": "drizzle-kit migrate && tsx src/db/seed.ts --if-empty && tsx src/db/seed-admin.ts && next start -p ${PORT:-3000}",
+    "start": "drizzle-kit migrate && tsx src/db/seed.ts --if-empty && tsx src/db/seed-admin.ts && next start -p ${PORT:-3000}",
+    "start:app-only": "next start -p ${PORT:-3000}",
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx src/db/seed.ts",
-    "db:seed-admin": "tsx src/db/seed-admin.ts"
+    "db:seed-admin": "tsx src/db/seed-admin.ts",
+    "db:bulk-import": "tsx src/db/bulk-import.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

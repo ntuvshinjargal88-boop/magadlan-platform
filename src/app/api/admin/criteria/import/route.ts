@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
-import { db } from "@/db";
-import { chapters, subChapters, criteria, indicators } from "@/db/schema";
+import { upsertChapter } from "@/db/import-logic";
 
 const criterionSchema = z.object({
   code: z.string(),
@@ -40,48 +39,15 @@ export async function POST(req: NextRequest) {
   }
   const raw = parsed.data;
 
-  const existingCount = await db.$count(chapters);
+  // Upsert by chapter `code`: if the chapter already exists (e.g. "Бүлэг 1"
+  // already has subchapters 1-2 seeded), only the subchapters not yet present
+  // are appended to it instead of creating a duplicate chapter row.
+  const { chapter, addedSubChapters, addedCriteria } = await upsertChapter(raw);
 
-  const [chapter] = await db
-    .insert(chapters)
-    .values({
-      code: raw.code,
-      title: raw.title,
-      sourceOrder: raw.sourceOrder ?? null,
-      sortOrder: existingCount + 1,
-    })
-    .returning();
-
-  let subOrder = 0;
-  for (const sub of raw.subChapters) {
-    subOrder++;
-    const [subChapter] = await db
-      .insert(subChapters)
-      .values({ chapterId: chapter.id, code: sub.code, title: sub.title, sortOrder: subOrder })
-      .returning();
-
-    let critOrder = 0;
-    for (const crit of sub.criteria) {
-      critOrder++;
-      const [criterion] = await db
-        .insert(criteria)
-        .values({
-          subChapterId: subChapter.id,
-          code: crit.code,
-          requirement: crit.requirement,
-          title: crit.title,
-          scoreOptions: crit.scoreOptions,
-          sortOrder: critOrder,
-        })
-        .returning();
-
-      let idx = 0;
-      for (const text of crit.indicators) {
-        idx++;
-        await db.insert(indicators).values({ criterionId: criterion.id, idx, text });
-      }
-    }
-  }
-
-  return NextResponse.json({ ok: true, chapterId: chapter.id });
+  return NextResponse.json({
+    ok: true,
+    chapterId: chapter.id,
+    addedSubChapters,
+    addedCriteria,
+  });
 }
