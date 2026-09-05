@@ -12,7 +12,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx src/db/seed.ts",
     "db:seed-admin": "tsx src/db/seed-admin.ts",
-    "db:bulk-import": "tsx src/db/bulk-import.ts"
+    "db:bulk-import": "tsx src/db/bulk-import.ts",
+    "db:seed-org": "tsx src/db/seed-org.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
