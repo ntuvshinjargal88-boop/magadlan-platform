@@ -9,7 +9,7 @@ export default async function CriteriaPage() {
   if (!session.orgId) redirect("/dashboard/admin/organizations");
 
   const fullTree = await getComplianceTree(session.orgId);
-  const tree = fullTree.filter((ch) => !ch.code.startsWith("ISO-"));
+  const tree = fullTree.filter((ch) => !(ch.sourceOrder ?? "").includes("ISO"));
 
   return (
     <div className="space-y-4">

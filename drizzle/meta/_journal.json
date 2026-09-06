@@ -8,6 +8,13 @@
       "when": 1788574836034,
       "tag": "0000_flashy_ogun",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788657003793,
+      "tag": "0001_rename_iso_chapter_codes",
+      "breakpoints": true
     }
   ]
 }
