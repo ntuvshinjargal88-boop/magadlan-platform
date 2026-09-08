@@ -21,7 +21,7 @@ export default async function DashboardPage() {
     orderBy: [desc(documents.createdAt)],
     limit: 5,
   });
-
+  
   return (
     <div className="space-y-6">
       <div>
@@ -36,37 +36,43 @@ export default async function DashboardPage() {
         <StatCard label="Хараахан эхлээгүй" value={summary.notStarted.toString()} tone="slate" />
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-slate-900">Ерөнхий бэлэн байдал</h2>
-          <span className="text-2xl font-bold text-sky-700">{summary.pct}%</span>
-        </div>
-        <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-slate-100">
-          <div className="h-full bg-sky-600" style={{ width: `${summary.pct}%` }} />
-        </div>
-
-        <div className="mt-6 space-y-3">
-          {summary.perChapter.map((ch) => (
-            <div key={ch.id}>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-700">
-                  Бүлэг {ch.code}. {ch.title}
-                </span>
-                <span className="text-slate-500">
-                  {ch.compliant}/{ch.total} ({ch.pct}%)
-                </span>
+            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center justify-between">
+                <h2 className="font-semibold text-slate-900">Ерөнхий бэлэн байдал (2 хөтөлбөр нийлбэрээр)</h2>
+                <span className="text-2xl font-bold text-sky-700">{summary.pct}%</span>
               </div>
-              <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-slate-100">
-                <div className="h-full bg-emerald-500" style={{ width: `${ch.pct}%` }} />
+              <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-slate-100">
+                <div className="h-full bg-sky-600" style={{ width: `${summary.pct}%` }} />
               </div>
+              <p className="mt-2 text-xs text-slate-400">Нэг баримт бичиг хоёр хөтөлбөрийн шалгуурт зэрэг холбогдож болно — доор хөтөлбөр тус бүрийн биелэлтийг тусад нь харна уу.</p>
             </div>
-          ))}
-          {summary.perChapter.length === 0 && (
-            <p className="text-sm text-slate-500">Одоогоор шалгуур бүртгэгдээгүй байна.</p>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {summary.perProgram.map((prog) => (
+        <div key={prog.key} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-slate-900">{prog.label}</h2>
+            <span className="text-xl font-bold text-sky-700">{prog.pct}%</span>
+          </div>
+          <p className="text-xs text-slate-500">{prog.compliant}/{prog.total} шалгуур хангасан</p>
+          <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-slate-100">
+            <div className="h-full bg-sky-600" style={{ width: `${prog.pct}%` }} />
+          </div>
+          <div className="mt-6 space-y-3">
+          {prog.chapters.map((ch) => (
+          <div key={ch.id}>
+            <div className="flex items-center justify-between text-sm">
+            <span className="text-slate-700">Бүлэг {ch.code}. {ch.title}</span>
+            <span className="text-slate-500">{ch.compliant}/{ch.total} ({ch.pct}%)</span></div>
+            <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-slate-100">
+            <div className="h-full bg-emerald-500" style={{ width: `${ch.pct}%` }} /></div>
+            
+        </div>))}
+            {prog.chapters.length === 0 && (
+          <p className="text-sm text-slate-500">Одоогоор шалгуур бүртгэгдээгүй байна.</p>
           )}
-        </div>
+          </div>
+        </div>))}
       </div>
-
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-slate-900">Сүүлд орсон баримт бичиг</h2>
