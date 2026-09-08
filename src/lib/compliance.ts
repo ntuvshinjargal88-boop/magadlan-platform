@@ -134,11 +134,30 @@ export function summarize(tree: ChapterTree[]) {
       id: ch.id,
       code: ch.code,
       title: ch.title,
+      sourceOrder: ch.sourceOrder,
       total: chTotal,
       compliant: chCompliant,
       pct: chTotal > 0 ? Math.round((chCompliant / chTotal) * 100) : 0,
     };
   });
+  const perProgram = (
+    [
+      { key: "A554", label: "Магадлангийн шалгуур (А/554)", isChapter: (s: string | null) => !(s ?? "").includes("ISO") },
+      { key: "ISO15189", label: "MNS ISO 15189:2024 шалгуур", isChapter: (s: string | null) => (s ?? "").includes("ISO") },
+      ] as const
+    ).map((prog) => {
+      const chapters = perChapter.filter((ch) => prog.isChapter(ch.sourceOrder));
+      const progTotal = chapters.reduce((sum, ch) => sum + ch.total, 0);
+      const progCompliant = chapters.reduce((sum, ch) => sum + ch.compliant, 0);
+      return {
+        key: prog.key,
+        label: prog.label,
+        total: progTotal,
+        compliant: progCompliant,
+        pct: progTotal > 0 ? Math.round((progCompliant / progTotal) * 100) : 0,
+        chapters,
+      };
+    });
 
   return {
     total,
@@ -149,5 +168,6 @@ export function summarize(tree: ChapterTree[]) {
     pct: total > 0 ? Math.round((compliant / total) * 100) : 0,
     avgScore: scoreCount > 0 ? Math.round((scoreSum / scoreCount) * 10) / 10 : null,
     perChapter,
+    perProgram,
   };
 }
