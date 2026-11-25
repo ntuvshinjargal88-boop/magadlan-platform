@@ -8,7 +8,11 @@ import { organizations, users } from "./schema";
 // Documents feature, which requires session.orgId).
 async function main() {
   const ORG_NAME = "Клинико Эмнэлэг";
-  const OWNER_EMAIL = (process.env.SUPER_ADMIN_EMAIL || "ntuvshinjargal88@gmail.com").toLowerCase();
+  const OWNER_EMAIL = (process.env.SUPER_ADMIN_EMAIL || "").trim().toLowerCase();
+  if (!OWNER_EMAIL) {
+    console.error("SUPER_ADMIN_EMAIL тохируулна уу.");
+    process.exit(1);
+  }
 
   let org = await db.query.organizations.findFirst({ where: eq(organizations.name, ORG_NAME) });
   if (!org) {

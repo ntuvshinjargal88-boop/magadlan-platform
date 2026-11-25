@@ -1,9 +1,10 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import type { Role } from "@/db/schema";
+import { jwtSecret } from "@/lib/secret";
 
 const COOKIE_NAME = "magadlan_session";
-const secret = () => new TextEncoder().encode(process.env.JWT_SECRET || "dev-secret");
+const secret = jwtSecret;
 
 export type SessionPayload = {
   userId: string;
