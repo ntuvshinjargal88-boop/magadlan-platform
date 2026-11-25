@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { jwtSecret } from "./lib/secret";
 
-const secret = () => new TextEncoder().encode(process.env.JWT_SECRET || "dev-secret");
+const secret = jwtSecret;
 const COOKIE_NAME = "magadlan_session";
 
 export async function proxy(req: NextRequest) {
